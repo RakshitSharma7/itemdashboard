@@ -1,0 +1,10 @@
+{
+    "name": "Item Dashboard Creator",
+    "version": "1.0",
+    "description": "Creates dashboards from selected Zabbix items",
+    "author": "Your Name",
+    "url": "https://example.com",
+    "compatibility": {
+        "zabbix": "7.0"
+    }
+}
