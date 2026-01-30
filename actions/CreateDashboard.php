@@ -1,4 +1,13 @@
 <?php
+declare(strict_types=1);
+
+namespace Modules\Itemdashboard\Actions;
+
+use API;
+use CController;
+use CControllerResponseData;
+use CControllerResponseRedirect;
+use CUrl;
 
 class CreateDashboard extends CController {
 
@@ -7,23 +16,12 @@ class CreateDashboard extends CController {
     }
 
     protected function checkInput(): bool {
-        $fields = [
-            'itemids' => 'string'
-        ];
-
-        $ret = $this->validateInput($fields);
-
-        if (!$ret) {
-            $this->setResponse(
-                new CControllerResponseFatal(_('Invalid input'))
-            );
-        }
-
-        return $ret;
+        return true;
     }
 
     protected function doAction(): void {
-        // If no input → show form
+
+        // Show form first
         if (!$this->hasInput('itemids')) {
             $this->setResponse(
                 new CControllerResponseData([
@@ -38,8 +36,8 @@ class CreateDashboard extends CController {
             array_map('trim', explode(',', $this->getInput('itemids')))
         );
 
-        if (empty($itemids)) {
-            throw new Exception('No item IDs provided');
+        if (!$itemids) {
+            throw new \Exception('No item IDs provided');
         }
 
         // Create dashboard
@@ -52,7 +50,6 @@ class CreateDashboard extends CController {
 
         $dashboardid = $dashboard['dashboardids'][0];
 
-        // Widget positioning
         $x = 0;
         $y = 0;
 
@@ -68,7 +65,7 @@ class CreateDashboard extends CController {
                     [
                         'type'  => ZBX_WIDGET_FIELD_TYPE_ITEM,
                         'name'  => 'itemid',
-                        'value' => $itemid
+                        'value' => (string) $itemid
                     ]
                 ]
             ]);
@@ -80,7 +77,7 @@ class CreateDashboard extends CController {
             }
         }
 
-        // Redirect to created dashboard
+        // Redirect to dashboard
         $this->setResponse(
             new CControllerResponseRedirect(
                 (new CUrl('zabbix.php'))

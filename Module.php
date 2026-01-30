@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+
+namespace Modules\Itemdashboard;
+
+use CModule;
 
 class Module extends CModule {
 
